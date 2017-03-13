@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# version: 0.0.1
+
 LOGTIME=$(date "+%Y-%m-%d %H:%M:%S")
 wget --spider --quiet --tries=1 --timeout=10 https://www.google.com/
 if [ "$?" == "0" ]; then

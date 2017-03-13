@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# version: 0.0.1
+
 set -e -o pipefail
 
 wget -O- 'http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest' | \
