@@ -143,7 +143,7 @@ _process(){
 	printf ' Done.\n\n'
 	
 	# Convert
-	if [ $_WITH_IPSET == 0 ]; then
+	if [ $_WITH_IPSET -eq 0 ]; then
 		echo "Writing file to $_OUT_FILE without ipset ..."
 		awk -v _dns="$_DNS_IP" -v _port="$_DNS_PORT" -F'/' '{printf("%s/%s/%s#%s\n",$1,$2,_dns,_port)}' $_CHINA_LIST_FILE > $_TMP_FILE
 	else
