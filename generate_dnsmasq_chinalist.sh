@@ -148,7 +148,7 @@ _process(){
 		awk -v _dns="$_DNS_IP" -v _port="$_DNS_PORT" -F'/' '{printf("%s/%s/%s#%s\n",$1,$2,_dns,_port)}' $_CHINA_LIST_FILE > $_TMP_FILE
 	else
 		echo "Writing file to $_OUT_FILE with ipset ..."
-		awk -v _dns="$_DNS_IP" -v _port="$_DNS_PORT" -v _ipset="$_IPSET_NAME" -F'/' '{printf("%s/%s/%s#%s\nipset=/%s/%s\n",$1,$2,_dns,_port,_dns,_ipset)}' $_CHINA_LIST_FILE > $_TMP_FILE
+		awk -v _dns="$_DNS_IP" -v _port="$_DNS_PORT" -v _ipset="$_IPSET_NAME" -F'/' '{printf("%s/%s/%s#%s\nipset=/%s/%s\n",$1,$2,_dns,_port,$2,_ipset)}' $_CHINA_LIST_FILE > $_TMP_FILE
 	fi
 	
 	mv $_TMP_FILE $_OUT_FILE
