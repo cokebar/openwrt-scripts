@@ -135,7 +135,7 @@ _process(){
 	
 	# Fetch China-List
 	printf 'Fetching China-List...'
-	curl -s -L $CURL_EXTARG -o$_CHINA_LIST_FILE $_BASE_URL
+	curl -s -L $_CURL_EXTARG -o$_CHINA_LIST_FILE $_BASE_URL
 	if [ $? != 0 ]; then
 		printf '\033[31mFailed to fetch China-List. Please check your Internet connection.\033[m\n'
 		_clean_and_exit 2
