@@ -132,6 +132,8 @@ _process(){
     _WORKING_DIR=`mktemp -d /tmp/generate_dnsmasq_chinalist.XXXXXX`
     _CHINA_LIST_FILE=$_WORKING_DIR/accelerated-domains.china.conf
     _TMP_FILE=$_WORKING_DIR/generate_dnsmasq_chinalist.tmp
+    _CHINA_DOMAIN_FILE=$_WORKING_DIR/china_domains.tmp
+    _ANNO_DOMAIN_FILE=$_WORKING_DIR/anno_domains.tmp
     
     # Fetch China-List
     printf 'Fetching China-List...'
@@ -142,13 +144,18 @@ _process(){
     fi
     printf ' Done.\n\n'
     
+    cat $_CHINA_LIST_FILE | grep -v '^#' > $_CHINA_DOMAIN_FILE
+    cat $_CHINA_LIST_FILE | grep '^#' > $_ANNO_DOMAIN_FILE
+    
     # Convert
     if [ $_WITH_IPSET -eq 0 ]; then
         echo "Writing file to $_OUT_FILE without ipset ..."
-        awk -v _dns="$_DNS_IP" -v _port="$_DNS_PORT" -F'/' '{printf("%s/%s/%s#%s\n",$1,$2,_dns,_port)}' $_CHINA_LIST_FILE > $_TMP_FILE
+        awk -v _dns="$_DNS_IP" -v _port="$_DNS_PORT" -F'/' '{printf("%s/%s/%s#%s\n",$1,$2,_dns,_port)}' $_ANNO_DOMAIN_FILE > $_TMP_FILE
+        awk -v _dns="$_DNS_IP" -v _port="$_DNS_PORT" -F'/' '{printf("%s/%s/%s#%s\n",$1,$2,_dns,_port)}' $_CHINA_DOMAIN_FILE >> $_TMP_FILE
     else
         echo "Writing file to $_OUT_FILE with ipset ..."
-        awk -v _dns="$_DNS_IP" -v _port="$_DNS_PORT" -v _ipset="$_IPSET_NAME" -F'/' '{printf("%s/%s/%s#%s\nipset=/%s/%s\n",$1,$2,_dns,_port,$2,_ipset)}' $_CHINA_LIST_FILE > $_TMP_FILE
+        awk -v _dns="$_DNS_IP" -v _port="$_DNS_PORT" -v _ipset="$_IPSET_NAME" -F'/' '{printf("%s/%s/%s#%s\n#ipset=/%s/%s\n",$1,$2,_dns,_port,$2,_ipset)}' $_ANNO_DOMAIN_FILE > $_TMP_FILE
+        awk -v _dns="$_DNS_IP" -v _port="$_DNS_PORT" -v _ipset="$_IPSET_NAME" -F'/' '{printf("%s/%s/%s#%s\nipset=/%s/%s\n",$1,$2,_dns,_port,$2,_ipset)}' $_CHINA_DOMAIN_FILE >> $_TMP_FILE
     fi
     
     mv $_TMP_FILE $_OUT_FILE
